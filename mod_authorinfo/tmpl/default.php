@@ -20,14 +20,11 @@ if ($showArticles && is_array($articles)) {
     $articles = array_slice($articles, 0, $articleLimit);
 }
 ?>
-<?php if ($customCss = trim($params->get('customCss'))): ?>
+  <?php if ($customCss = trim($params->get('customCss'))): ?>
     <style>
-        #mod-authorinfo-<?php echo $module->id; ?> {
             <?php echo $customCss; ?>
-        }
     </style>
 <?php endif; ?>
-<div id="mod-authorinfo-<?php echo $module->id; ?>">
 <?php if ($showImage && $contact->image): ?>
     <img class="author-photo" src="<?php echo htmlspecialchars($contact->image); ?>" alt="<?php echo htmlspecialchars($contact->name); ?>" />
 <?php if ($showMisc && $contact->misc): ?>
@@ -70,4 +67,3 @@ if ($showArticles && is_array($articles)) {
     </a>
 </p>
 <?php endif; ?>
-</div>
