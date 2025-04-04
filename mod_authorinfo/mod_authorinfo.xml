@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="5.0" client="site" method="upgrade">
+    <name>MOD_AUTHORINFO</name>
+    <creationDate>2025-04-04</creationDate>
+    <author>Rinenweb</author>
+    <license>GPL License v3</license>
+	<authorEmail>info@rinenweb.eu</authorEmail>
+	<authorUrl>https://www.rinenweb.eu</authorUrl>
+    <version>1.0.0</version>
+    <description>MOD_AUTHORINFO_DESC</description>
+    <files>
+        <filename module="mod_authorinfo">mod_authorinfo.php</filename>
+        <filename>helper.php</filename>
+        <filename>tmpl/default.php</filename>
+        <folder>tmpl</folder>
+        <folder>language</folder>
+    </files>
+    <languages folder="language">
+        <language tag="en-GB">en-GB/mod_authorinfo.ini</language>
+        <language tag="en-GB">en-GB/mod_authorinfo.sys.ini</language>
+    </languages>
+    <config>
+        <fields name="params">
+            <fieldset name="basic">
+                <field name="show_image" type="radio" class="btn-group btn-group-yesno" label="MOD_AUTHORINFO_SHOW_IMAGE" default="1">
+                    <option value="1">YES</option>
+                    <option value="0">NO</option>
+                </field>
+                <field name="show_misc" type="radio" class="btn-group btn-group-yesno" label="MOD_AUTHORINFO_SHOW_MISC" default="1">
+                    <option value="1">YES</option>
+                    <option value="0">NO</option>
+                </field>
+                <field name="show_articles" type="radio" class="btn-group btn-group-yesno"
+               label="MOD_AUTHORINFO_SHOW_ARTICLES" default="1">
+            <option value="1">YES</option>
+            <option value="0">NO</option>
+                </field>
+        <field name="article_limit" type="limitbox" default="5"
+               label="MOD_AUTHORINFO_ARTICLE_LIMIT_LABEL"
+               description="MOD_AUTHORINFO_ARTICLE_LIMIT_DESC"
+               showon="show_articles:1" />
+<field name="show_contact_form" type="radio" class="btn-group btn-group-yesno" label="MOD_AUTHORINFO_SHOW_CONTACT_FORM" default="0">
+                    <option value="1">YES</option>
+                    <option value="0">NO</option>
+                </field>
+            <field name="customCss" type="editor" default=".mod-authorinfo img.author-photo { max-width: 100%; border-radius: 5%; }"
+                filter="raw"
+                label="Custom CSS"
+                description="CSS code to override the default template styling"
+                rows="5"
+                editor="codemirror|none"
+                buttons="false"
+                syntax="css" />
+
+				
+</fieldset>
+            <fieldset name="advanced">
+            <field
+					name="layout"
+					type="modulelayout"
+					label="JFIELD_ALT_LAYOUT_LABEL"
+					class="form-select"
+					validate="moduleLayout"
+				/>
+
+				<field
+					name="moduleclass_sfx"
+					type="textarea"
+					label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
+					rows="3"
+					validate="CssIdentifier"
+				/>
+
+				<field
+					name="cache"
+					type="list"
+					label="COM_MODULES_FIELD_CACHING_LABEL"
+					default="1"
+					filter="integer"
+					validate="options"
+					>
+					<option value="1">JGLOBAL_USE_GLOBAL</option>
+					<option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
+				</field>
+
+				<field
+					name="cache_time"
+					type="number"
+					label="COM_MODULES_FIELD_CACHE_TIME_LABEL"
+					default="900"
+					filter="integer"
+				/>
+
+				<field
+					name="cachemode"
+					type="hidden"
+					default="static"
+					>
+					<option value="static"></option>
+				</field>
+			</fieldset>
+        </fields>
+    </config>
+</extension>
