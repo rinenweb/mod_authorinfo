@@ -3,6 +3,7 @@
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Text;
 use Joomla\Component\Contact\Site\Helper\RouteHelper;
+//use Joomla\Component\Content\Site\Helper\RouteHelper as ContentHelperRoute;
 
 $showImage = $params->get('show_image');
 $showMisc = $params->get('show_misc');
