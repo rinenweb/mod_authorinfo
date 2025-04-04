@@ -18,6 +18,8 @@
     <languages folder="language">
         <language tag="en-GB">en-GB/mod_authorinfo.ini</language>
         <language tag="en-GB">en-GB/mod_authorinfo.sys.ini</language>
+        <language tag="el-GR">el-GR/mod_authorinfo.ini</language>
+        <language tag="el-GR">el-GR/mod_authorinfo.sys.ini</language>
     </languages>
     <config>
         <fields name="params">
