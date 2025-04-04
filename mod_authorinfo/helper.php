@@ -4,7 +4,7 @@ use Joomla\CMS\Factory;
 
 class ModAuthorInfoHelper
 {
-    public static function getAuthorContact()
+    public static function getAuthorContact($limit = 5)
     {
         $app = Factory::getApplication();
         $input = $app->input;
