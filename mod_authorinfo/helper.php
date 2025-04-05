@@ -38,7 +38,7 @@ class ModAuthorInfoHelper
         if (!$contact) return null;
 
         $query = $db->getQuery(true)
-            ->select('id, title')
+            ->select('id, title, catid, alias, language')
             ->from('#__content')
             ->where('state = 1')
             ->where('created_by = ' . (int) $article->created_by)
@@ -47,6 +47,10 @@ class ModAuthorInfoHelper
             ->setLimit((int) $limit);
         $db->setQuery($query);
         $otherArticles = $db->loadObjectList();
+
+        foreach ($otherArticles as &$article) {
+            $article->slug = $article->id . ':' . $article->alias;
+        }
 
         return (object) [
             'contact' => $contact,

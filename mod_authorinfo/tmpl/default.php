@@ -52,7 +52,7 @@ if ($showArticles && is_array($articles)) {
 <ul>
 <?php foreach ($articles as $article): ?>
 <li>
-<a href="<?php echo Route::_(ContentHelperRoute::getArticleRoute($article->slug, $article->catid)); ?>">
+<a href="<?php echo Route::_(ContentHelperRoute::getArticleRoute($article->id, $article->catid)); ?>">
 <?php echo htmlspecialchars($article->title); ?>
 </a>
 </li>
