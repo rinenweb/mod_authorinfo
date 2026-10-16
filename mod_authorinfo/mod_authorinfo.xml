@@ -39,10 +39,6 @@
                label="MOD_AUTHORINFO_ARTICLE_LIMIT_LABEL"
                description="MOD_AUTHORINFO_ARTICLE_LIMIT_DESC"
                showon="show_articles:1" />
-			<field name="show_contact_form" type="radio" class="btn-group btn-group-yesno" label="MOD_AUTHORINFO_SHOW_CONTACT_FORM" default="0">
-                    <option value="1">YES</option>
-                    <option value="0">NO</option>
-                </field>
 			<field name="heading_tag" type="list" default="h4"
 			    label="MOD_AUTHORINFO_HEADING_TAG_LABEL" validate="options"
 			    showon="show_articles:1">
@@ -53,6 +49,10 @@
 			    <option value="h6">h6</option>
 			    <option value="p">p</option>
 			</field>
+			<field name="show_contact_form" type="radio" class="btn-group btn-group-yesno" label="MOD_AUTHORINFO_SHOW_CONTACT_FORM" default="0">
+                <option value="1">YES</option>
+                <option value="0">NO</option>
+            </field>
         	<field name="customCss" type="editor"
 			default=".mod-authorinfo .author-photo img { max-width: 100%; border-radius: 5%; }"
 			filter="raw"
