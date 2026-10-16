@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="module" version="5.0" client="site" method="upgrade">
     <name>MOD_AUTHORINFO</name>
-    <creationDate>2025-04-04</creationDate>
+    <creationDate>2026-10-16</creationDate>
     <author>Rinenweb</author>
     <license>GPL License v3</license>
 	<authorEmail>info@rinenweb.eu</authorEmail>
 	<authorUrl>https://www.rinenweb.eu</authorUrl>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <description>MOD_AUTHORINFO_DESC</description>
     <files>
         <filename module="mod_authorinfo">mod_authorinfo.php</filename>
         <filename>helper.php</filename>
-        <filename>tmpl/default.php</filename>
         <folder>tmpl</folder>
-        <folder>language</folder>
     </files>
     <languages folder="language">
         <language tag="en-GB">en-GB/mod_authorinfo.ini</language>
@@ -37,25 +35,31 @@
             <option value="1">YES</option>
             <option value="0">NO</option>
                 </field>
-        <field name="article_limit" type="limitbox" default="5"
+        	<field name="article_limit" type="limitbox" default="5"
                label="MOD_AUTHORINFO_ARTICLE_LIMIT_LABEL"
                description="MOD_AUTHORINFO_ARTICLE_LIMIT_DESC"
                showon="show_articles:1" />
-<field name="show_contact_form" type="radio" class="btn-group btn-group-yesno" label="MOD_AUTHORINFO_SHOW_CONTACT_FORM" default="0">
+			<field name="show_contact_form" type="radio" class="btn-group btn-group-yesno" label="MOD_AUTHORINFO_SHOW_CONTACT_FORM" default="0">
                     <option value="1">YES</option>
                     <option value="0">NO</option>
                 </field>
-            <field name="customCss" type="editor" default=".mod-authorinfo img.author-photo { max-width: 100%; border-radius: 5%; }"
-                filter="raw"
-                label="Custom CSS"
-                description="CSS code to override the default template styling"
-                rows="5"
-                editor="codemirror|none"
-                buttons="false"
-                syntax="css" />
-
-				
-</fieldset>
+			<field name="heading_tag" type="list" default="h4"
+			    label="MOD_AUTHORINFO_HEADING_TAG_LABEL" validate="options"
+			    showon="show_articles:1">
+			    <option value="h2">h2</option>
+			    <option value="h3">h3</option>
+			    <option value="h4">h4</option>
+			    <option value="h5">h5</option>
+			    <option value="h6">h6</option>
+			    <option value="p">p</option>
+			</field>
+        	<field name="customCss" type="editor"
+			default=".mod-authorinfo .author-photo img { max-width: 100%; border-radius: 5%; }"
+			filter="raw"
+			label="MOD_AUTHORINFO_CUSTOM_CSS_LABEL"
+			description="MOD_AUTHORINFO_CUSTOM_CSS_DESC"
+			rows="5" editor="codemirror|none" buttons="false" syntax="css" />
+		</fieldset>
             <fieldset name="advanced">
             <field
 					name="layout"
@@ -64,7 +68,6 @@
 					class="form-select"
 					validate="moduleLayout"
 				/>
-
 				<field
 					name="moduleclass_sfx"
 					type="textarea"
@@ -72,7 +75,6 @@
 					rows="3"
 					validate="CssIdentifier"
 				/>
-
 				<field
 					name="cache"
 					type="list"
@@ -84,7 +86,6 @@
 					<option value="1">JGLOBAL_USE_GLOBAL</option>
 					<option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
 				</field>
-
 				<field
 					name="cache_time"
 					type="number"
@@ -92,15 +93,13 @@
 					default="900"
 					filter="integer"
 				/>
-
-				<field
-					name="cachemode"
-					type="hidden"
-					default="static"
-					>
-					<option value="static"></option>
+				<field name="cachemode" type="hidden" default="safeuri">
+				    <option value="safeuri"></option>
 				</field>
 			</fieldset>
         </fields>
     </config>
+	<updateservers>
+	    <server type="extension" priority="1" name="Author Info">https://raw.githubusercontent.com/rinenweb/mod_authorinfo/main/manifest.xml</server>
+	</updateservers>
 </extension>
