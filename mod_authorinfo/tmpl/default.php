@@ -1,90 +1,98 @@
-<?php defined('_JEXEC') or die; ?>
 <?php
-use Joomla\CMS\Router\Route;
+defined('_JEXEC') or die;
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\Component\Contact\Site\Helper\RouteHelper;
-use Joomla\Component\Content\Site\Helper\RouteHelper as ContentHelperRoute;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\Component\Contact\Site\Helper\RouteHelper as ContactRouteHelper;
+use Joomla\Component\Content\Site\Helper\RouteHelper as ContentRouteHelper;
 
-$showImage = $params->get('show_image');
-$showMisc = $params->get('show_misc');
-$showForm = $params->get('show_contact_form');
-$showArticles = (bool) $params->get('show_articles');
-$articleLimit = (int) $params->get('article_limit', 5);
+$e = static function ($value) {
+    return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+};
 
-$data = ModAuthorInfoHelper::getAuthorContact();
-if (!$data) return;
+$contact  = $authorData->contact;
+$articles = $authorData->articles;
 
-$contact = $data->contact;
-$articles = $data->articles;
-if ($showArticles && is_array($articles)) {
-    $articles = array_slice($articles, 0, $articleLimit);
+$showImage  = (bool) $params->get('show_image', 1) && !empty($contact->image);
+$showMisc   = (bool) $params->get('show_misc', 1);
+$showLink   = (bool) $params->get('show_contact_form', 0);
+$headingTag = $params->get('heading_tag', 'h4');
+$headingTag = in_array($headingTag, ['h2', 'h3', 'h4', 'h5', 'h6', 'p'], true) ? $headingTag : 'h4';
+
+$contactUrl = Route::_(ContactRouteHelper::getContactRoute(
+    $contact->id . ':' . $contact->alias,
+    $contact->catid,
+    $contact->language
+));
+
+// Custom CSS goes into <head> via the Web Asset Manager
+$customCss = trim((string) $params->get('customCss', ''));
+
+if ($customCss !== '') {
+    Factory::getApplication()->getDocument()->getWebAssetManager()->addInlineStyle($customCss);
 }
-?>
 
-<?php if ($customCss = trim($params->get('customCss'))): ?>
-    <style>
-        <?php echo $customCss; ?>
-    </style>
-<?php endif; ?>
+// Split the bio at the "Read more" separator, then run content plugins on the visible part
+$intro = '';
+$rest  = '';
 
-<?php
-$miscOutput = '';
-if ($showMisc && $contact->misc) {
-    $cleaned = preg_replace('/\s+/', ' ', $contact->misc);
-    $parts = preg_split('/<hr[^>]+id=["\']system-readmore["\'][^>]*>/i', $cleaned, 2);
-    $intro = $parts[0];
-    $rest = $parts[1] ?? '';
-    ob_start();
-    ?>
-    <div class="author-bio">
-        <?php echo $intro; ?>
-        <?php if (!empty($rest)): ?>
-            <p>
-                <a href="<?php echo Route::_(RouteHelper::getContactRoute($contact->id, $contact->catid)); ?>">
-                    <?php echo sprintf(Text::_('MOD_AUTHORINFO_READ_MORE'), htmlspecialchars($contact->name)); ?>
-                </a>
-            </p>
-        <?php endif; ?>
-    </div>
-    <?php
-    $miscOutput = ob_get_clean();
+if ($showMisc && !empty($contact->misc)) {
+    $parts = preg_split('/<hr\s[^>]*id=["\']system-readmore["\'][^>]*>/i', $contact->misc, 2);
+    $intro = trim(HTMLHelper::_('content.prepare', $parts[0], '', 'mod_authorinfo.misc'));
+    $rest  = trim($parts[1] ?? '');
 }
-?>
 
-<?php if ($showImage && $contact->image && $miscOutput): ?>
-    <div class="author-info-flex">
+$both = $showImage && $intro !== '';
+?>
+<div class="mod-authorinfo">
+    <?php if ($both) : ?><div class="author-info-flex"><?php endif; ?>
+
+    <?php if ($showImage) : ?>
         <div class="author-photo">
-            <img src="<?php echo htmlspecialchars($contact->image); ?>" alt="<?php echo htmlspecialchars($contact->name); ?>" />
+            <?php echo LayoutHelper::render('joomla.html.image', ['src' => $contact->image, 'alt' => $contact->name]); ?>
         </div>
-        <?php echo $miscOutput; ?>
-    </div>
-<?php elseif ($showImage && $contact->image): ?>
-    <div class="author-photo">
-        <img src="<?php echo htmlspecialchars($contact->image); ?>" alt="<?php echo htmlspecialchars($contact->name); ?>" />
-    </div>
-<?php elseif ($miscOutput): ?>
-    <?php echo $miscOutput; ?>
-<?php endif; ?>
+    <?php endif; ?>
 
-<?php if ($showArticles && !empty($articles)): ?>
-    <div class="author-articles">
-        <h4><?php echo sprintf(Text::_('MOD_AUTHORINFO_OTHER_ARTICLES'), htmlspecialchars($contact->name)); ?></h4>
-        <ul>
-            <?php foreach ($articles as $article): ?>
-                <li>
-                    <a href="<?php echo Route::_(ContentHelperRoute::getArticleRoute($article->slug, $article->catid, $article->language)); ?>">
-                        <?php echo htmlspecialchars($article->title); ?>
+    <?php if ($intro !== '') : ?>
+        <div class="author-bio">
+            <?php echo $intro; ?>
+            <?php if ($rest !== '') : ?>
+                <p>
+                    <a href="<?php echo $contactUrl; ?>">
+                        <?php echo Text::sprintf('MOD_AUTHORINFO_READ_MORE', $e($contact->name)); ?>
                     </a>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    </div>
-<?php endif; ?>
+                </p>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
 
-<?php if ($showForm): ?>
-    <p>
-        <a href="<?php echo Route::_(RouteHelper::getContactRoute($contact->id, $contact->catid)); ?>">
-            <?php echo sprintf(Text::_('MOD_AUTHORINFO_CONTACT_LINK'), htmlspecialchars($contact->name)); ?>
-        </a>
-    </p>
-<?php endif; ?>
+    <?php if ($both) : ?></div><?php endif; ?>
+
+    <?php if (!empty($articles)) : ?>
+        <div class="author-articles">
+            <<?php echo $headingTag; ?>>
+                <?php echo Text::sprintf('MOD_AUTHORINFO_OTHER_ARTICLES', $e($contact->name)); ?>
+            </<?php echo $headingTag; ?>>
+            <ul>
+                <?php foreach ($articles as $item) : ?>
+                    <li>
+                        <a href="<?php echo Route::_(ContentRouteHelper::getArticleRoute($item->slug, $item->catid, $item->language)); ?>">
+                            <?php echo $e($item->title); ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($showLink) : ?>
+        <p class="author-contact-link">
+            <a href="<?php echo $contactUrl; ?>">
+                <?php echo Text::sprintf('MOD_AUTHORINFO_CONTACT_LINK', $e($contact->name)); ?>
+            </a>
+        </p>
+    <?php endif; ?>
+</div>
