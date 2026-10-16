@@ -2,7 +2,7 @@
 
 ## Description
 
-This Joomla 5 module displays detailed information about the author of a given article.  
+This Joomla module displays detailed information about the author of a given article.  
 It can show the author's image, miscellaneous information, a link to the contact's page and a list of other articles by the same author.
 
 It's a lightweight and useful tool for content-focused Joomla sites that wish to promote author presence and content discovery.
@@ -37,6 +37,9 @@ After installation, the module offers the following parameters:
 
 - **Display Link to Contact**  
   Adds a link to the Joomla contact page of the author (requires a Joomla Contact item linked to the user).
+
+- **Heading Tag for Article List**  
+  Define the Heading tag for the Article List (H2, H3 etc.)
 
 - **Custom CSS**  
   Add your own CSS class to customize the module's appearance further.
